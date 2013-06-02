@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ChooseAccountActivity"
+    android:orientation="vertical"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    
+    <RelativeLayout
+        android:id="@+id/FirstLayout"
+        android:layout_width="match_parent"        
+        android:layout_weight="1.5"
+        android:layout_height="0dp"
+        android:orientation="vertical">
+
+	    <TextView
+	        android:id="@+id/textView1"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true"
+	        android:text="Choose from your existing Contacts"
+	        android:textStyle="italic"
+	        android:typeface="serif" />
+	
+	    <ListView
+	        android:id="@+id/accountList"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_alignLeft="@+id/textView1"
+	        android:layout_below="@+id/textView1" >
+	    </ListView>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/SecondLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/accountList"
+            android:layout_below="@+id/accountList"
+            android:layout_marginTop="17dp"
+            android:text="Or add new User"
+            android:textStyle="italic"
+            android:typeface="serif" />
+
+        <EditText
+            android:id="@+id/newUserEmailInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView2"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="user@gmail.com"
+            android:inputType="textEmailAddress" >
+        </EditText>
+
+        <EditText
+            android:id="@+id/newUserNameInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/newUserEmailInput"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/newUserEmailInput"
+            android:layout_marginTop="19dp"
+            android:ems="10"
+            android:hint="User name for chatting"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/addNewUserButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/newUserNameInput"
+            android:layout_centerHorizontal="true"
+            android:text="Add User" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>
