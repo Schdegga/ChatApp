@@ -21,6 +21,8 @@ import org.jivesoftware.smackx.ReportedData.Row;
 import org.jivesoftware.smackx.search.UserSearchManager;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -181,7 +183,37 @@ public class MainChatActivity extends Activity {
 
 	private void handlePresencePackets(Packet packet) {
 		Presence presence = (Presence)packet;
+		final String sender = presence.getFrom();
+		boolean inRoster = chatPartners.contains(presence.getFrom());
+		Log.i("Presence Listener", "Received Presence Packet from " + presence.getFrom() + " with Type " + presence.getType() + 
+									". Is this person already in Roster? " + Boolean.toString(inRoster));
 		
+		switch (presence.getType()) 
+		{
+			case subscribe:
+				if (inRoster)
+				{
+					Presence response = new Presence(Presence.Type.subscribed);
+					response.setTo(sender);
+					connection.sendPacket(response);
+				}
+				else
+				{
+					showSubscriptionDialog(sender);
+				}
+				break;
+
+			case unsubscribed:
+				showToast("User "+ sender +"unsubscribed from you and is deleted from your List");
+				removeUser(new ChatPartner(sender, chatPartners.getEntry(sender).getName()));
+				break;
+				
+			default:
+				Log.i("Presence Listener", "Not handled!");
+		}
+		
+		
+		/*
 		if (presence.getType() == Presence.Type.subscribe ||
 			presence.getType() == Presence.Type.subscribed)
 		{
@@ -192,10 +224,71 @@ public class MainChatActivity extends Activity {
 				connection.sendPacket(response);
 			}
 		}
+		*/
+	}
+	
+	
+	
+	/**
+	 * Displays a Toast on the UI Thread
+	 * @param string the Messages which is posted
+	 */
+	private void showToast(final String message) {
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(MainChatActivity.this, message, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 
-	// 
+	
+	/**
+	 * Displays a Dialog to the User when a Subscription Request is incoming
+	 * @param sender who wanted to subscribe
+	 */
+	private void showSubscriptionDialog(final String sender) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				new AlertDialog.Builder(MainChatActivity.this)
+				.setTitle("New Subscription Request")
+				.setMessage(sender + " sent a subscription request. Do you want to start chatting with this User?")
+				.setCancelable(false)
+				.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Presence unSubscribe = new Presence(Presence.Type.unsubscribe);
+						Presence unSubscribed = new Presence(Presence.Type.unsubscribed);
+						unSubscribe.setTo(sender);
+						unSubscribed.setTo(sender);
+						connection.sendPacket(unSubscribe);
+						connection.sendPacket(unSubscribed);
+						dialog.cancel();
+					}
+				})
+				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Presence subscribe = new Presence(Presence.Type.subscribe);
+						Presence subscribed = new Presence(Presence.Type.subscribed);
+						subscribe.setTo(sender);
+						subscribed.setTo(sender);
+						connection.sendPacket(subscribe);
+						connection.sendPacket(subscribed);
+						addUser(sender, sender.split("@")[0]);
+						dialog.cancel();
+					}
+				}).show();
+			}
+		});
+	}
+
+
+	// Is Called when another Activity returns. Adds chosen User to Roster if he exists
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
@@ -211,7 +304,6 @@ public class MainChatActivity extends Activity {
 					{
 						addUser(userEmail, userName);
 					}
-					
 				}
 				else
 				{

@@ -81,6 +81,20 @@ public class Login extends Activity {
 	
 	
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	
+		if (connection != null)
+		{
+			Log.i("Login (On Destroy)", "Conenction is destroyed");
+			connection.disconnect();
+			connection = null;
+		}
+	}
+	
+	
+	
 	public static XMPPConnection getConnection()
 	{
 		return connection;

@@ -53,9 +53,8 @@ public class ChooseAccountActivity extends FragmentActivity implements LoaderCal
 	private static final int CONTACT_DISPLAY_NAME_INDEX = 1;
 	private static final int CONTACT_EMAIL_ADDRESS_INDEX = 2;
 	
-	// Restricts Query: Only give back not-empty Email-Addresses and gmail-Accounts (as we use GoogleTalk)
-	private final static String SELECTION = "(" + Email.DATA + " NOT LIKE '') AND (" + 
-											 Email.DATA + " LIKE '%gmail%')";
+	// Restricts Query: Only give back not-empty Email-Addresses
+	private final static String SELECTION = "(" + Email.DATA + " NOT LIKE '')";
 	
 	// ListView and corresponding Adapter
 	private ListView  accountView;
