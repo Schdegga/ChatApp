@@ -22,6 +22,7 @@ import org.jivesoftware.smackx.search.UserSearchManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,6 +50,7 @@ public class MainChatActivity extends Activity {
 	private static final String DELETE_USER_TAG = "Delete User Error";
 	// Request Tag for changing to another Activity
 	static final int PICK_ACCOUNT_REQUEST = 1;
+	static final int CHAT_ROOM_REQUEST = 2;
 	// GUI elements
 	private ListView 	   listView;
 	private Button 		   addButton;
@@ -57,6 +59,8 @@ public class MainChatActivity extends Activity {
 	private Roster		   chatPartners;
 	private ArrayList<ChatPartner> chats;
 	private ChatManager    chatManager;
+	private static Context context;
+	private ArrayAdapter<ChatPartner> adapter;
 
 
 	@Override
@@ -71,6 +75,7 @@ public class MainChatActivity extends Activity {
 		chatPartners = this.connection.getRoster();
 		addButton = (Button) findViewById(R.id.addChatPartner);
 		listView = (ListView) findViewById(R.id.chatPartners);
+		context = this;
 		
 		
 		// Handle subscriptions
@@ -104,7 +109,7 @@ public class MainChatActivity extends Activity {
 		}
 		
 		// Set ListView - Adapter
-		ArrayAdapter<ChatPartner> adapter = new ArrayAdapter<ChatPartner>(this, R.layout.chat_partner_view, R.id.chat_partner_item_view, chats);
+		adapter = new ArrayAdapter<ChatPartner>(this, R.layout.chat_partner_view, R.id.chat_partner_item_view, chats);
 		listView.setAdapter(adapter);
 		
 		// Handle ListItem Clicks
@@ -130,7 +135,7 @@ public class MainChatActivity extends Activity {
 				intent.putExtra("chosenChatPartnerEmail", clickedUser.getEmail());
 				intent.putExtra("chosenChatPartnerName", clickedUser.getName());
 				intent.putStringArrayListExtra("messagesOutsideChatroom", clickedUser.getMessages());
-				startActivity(intent);
+				startActivityForResult(intent, CHAT_ROOM_REQUEST);
 			}
 		});
 		
@@ -144,6 +149,12 @@ public class MainChatActivity extends Activity {
 				startActivityForResult(intent, PICK_ACCOUNT_REQUEST);
 			}
 		});
+	}
+	
+	
+	public static void setContext(Context newContext)
+	{
+		context = newContext;
 	}
 	
 	
@@ -238,7 +249,7 @@ public class MainChatActivity extends Activity {
 			
 			@Override
 			public void run() {
-				Toast.makeText(MainChatActivity.this, message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -254,13 +265,14 @@ public class MainChatActivity extends Activity {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				new AlertDialog.Builder(MainChatActivity.this)
+				new AlertDialog.Builder(context)
 				.setTitle("New Subscription Request")
 				.setMessage(sender + " sent a subscription request. Do you want to start chatting with this User?")
 				.setCancelable(false)
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// Don´t accept subscription request
 						Presence unSubscribe = new Presence(Presence.Type.unsubscribe);
 						Presence unSubscribed = new Presence(Presence.Type.unsubscribed);
 						unSubscribe.setTo(sender);
@@ -273,6 +285,7 @@ public class MainChatActivity extends Activity {
 				.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
+						// Accept request and add User
 						Presence subscribe = new Presence(Presence.Type.subscribe);
 						Presence subscribed = new Presence(Presence.Type.subscribed);
 						subscribe.setTo(sender);
@@ -293,7 +306,11 @@ public class MainChatActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    super.onActivityResult(requestCode, resultCode, data);
 	    
-		switch(requestCode) {
+	    // Keep Track of Context
+	    context = this;
+	    
+		switch(requestCode) 
+		{
 			case PICK_ACCOUNT_REQUEST:
 				if (resultCode == RESULT_OK)
 				{
@@ -309,13 +326,17 @@ public class MainChatActivity extends Activity {
 				{
 					Toast.makeText(this, "No User Selected", Toast.LENGTH_SHORT).show();
 				}
+				break;
+				
+			default:
+				Log.i("Context Tracker", "Returned to MainChatActivity");
 		}
 	}
 	
 
 	
 	 // Add new ChatPartner to Array and subscribe to Server
-	private void addUser(String email, String name)
+	private void addUser(final String email, final String name)
 	{
 		try 
 		{
@@ -326,8 +347,13 @@ public class MainChatActivity extends Activity {
 				Log.i("PRESENCE_TAG", "Sending subscribe request to: "+response.getTo());
 				connection.sendPacket(response);
 				chatPartners.createEntry(email, name, null);
-				chats.add(new ChatPartner(email, name));
-				((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						adapter.add(new ChatPartner(email, name));
+						adapter.notifyDataSetChanged();
+					}
+				});
 			}
 			else
 			{
@@ -345,19 +371,25 @@ public class MainChatActivity extends Activity {
 	
 	
 	// Remove user from Array and unsubscribe 
-	private boolean removeUser(ChatPartner user)
+	private boolean removeUser(final ChatPartner user)
 	{
-		try 
-		{
-			chatPartners.removeEntry(chatPartners.getEntry(user.getEmail()));
-			chats.remove(user);
-			((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
-		}
-		catch (XMPPException e)
-		{
-			Log.e(DELETE_USER_TAG, "Error when removing User" + user.getName());
-			Log.e(DELETE_USER_TAG, e.toString());
-		}
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				try 
+				{
+					chatPartners.removeEntry(chatPartners.getEntry(user.getEmail()));
+					adapter.remove(user);
+					adapter.notifyDataSetChanged();
+				}
+				catch (XMPPException e)
+				{
+					Log.e(DELETE_USER_TAG, "Error when removing User" + user.getName());
+					Log.e(DELETE_USER_TAG, e.toString());
+				}
+			}
+		});
+
 		return true;
 	}
 	

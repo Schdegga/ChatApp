@@ -73,6 +73,9 @@ public class ChooseAccountActivity extends FragmentActivity implements LoaderCal
 		// Initializes loading the Contact-Data
 		getSupportLoaderManager().initLoader(0, null, this);
 		
+		// Keep Track of Context
+		MainChatActivity.setContext(this);
+		
 		// Setup GUI Members
 		emailInput = (EditText) findViewById(R.id.newUserEmailInput);
 		nameInput  = (EditText) findViewById(R.id.newUserNameInput);

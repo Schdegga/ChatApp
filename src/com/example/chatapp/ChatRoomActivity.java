@@ -51,6 +51,9 @@ public class ChatRoomActivity extends Activity {
 		sendButton = (Button) findViewById(R.id.chatRoomSendMessageButton);
 		messageInput = (EditText) findViewById(R.id.chatRoomMessageText);
 		
+		// Keep Track of Context
+		MainChatActivity.setContext(this);
+		
 		sendButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
