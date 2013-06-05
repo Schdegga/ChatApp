@@ -116,15 +116,16 @@ public class Login extends Activity {
 				@Override
 				public void run() {
 					new AlertDialog.Builder(Login.this)
-												.setTitle("Null Pointer Exception")
-												.setMessage("App will be closed on Button Click!")
+												.setTitle("No Connection established")
+												.setMessage("Please try Logging in again, or check Internet connection")
 												.setCancelable(false)
 												.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
 													
 													@Override
 													public void onClick(DialogInterface dialog, int which) {
 														dialog.cancel();
-														Login.this.finish();
+														usernameInput.setText("");
+														passwordInput.setText("");
 													}
 												})
 												.show();

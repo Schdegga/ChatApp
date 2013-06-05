@@ -65,6 +65,9 @@ public class ChooseAccountActivity extends FragmentActivity implements LoaderCal
     private Button   addButton;
 	
 
+    /**
+     * onCreate() Android Lifecycle Method
+     */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,6 +84,34 @@ public class ChooseAccountActivity extends FragmentActivity implements LoaderCal
 		nameInput  = (EditText) findViewById(R.id.newUserNameInput);
 		addButton  = (Button)   findViewById(R.id.addNewUserButton);
 		
+		// Setup ListView and Adapter
+		accountView = (ListView) findViewById(R.id.accountList);
+		cursorAdapter = new SimpleCursorAdapter(this, R.layout.account_view, null, FROM_COLUMNS, TO_IDS, 0);
+		accountView.setAdapter(cursorAdapter);
+		
+		initialiseListeners();
+
+	}
+
+
+
+	/**
+	 * Android Method
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.choose_account, menu);
+		return true;
+	}
+
+	
+	
+	/**
+	 * Sets all Listeners
+	 */
+	private void initialiseListeners()
+	{
 		addButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -91,11 +122,6 @@ public class ChooseAccountActivity extends FragmentActivity implements LoaderCal
 				changeActivityWithResult(contactName, contactEmail);
 			}
 		});
-		
-		// Setup ListView and Adapter
-		accountView = (ListView) findViewById(R.id.accountList);
-		cursorAdapter = new SimpleCursorAdapter(this, R.layout.account_view, null, FROM_COLUMNS, TO_IDS, 0);
-		accountView.setAdapter(cursorAdapter);
 		
 		accountView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -112,22 +138,16 @@ public class ChooseAccountActivity extends FragmentActivity implements LoaderCal
 				changeActivityWithResult(contactName, contactEmail);
 			}
 		});
-		
-		
-		
-
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.choose_account, menu);
-		return true;
-	}
 	
 	
-	
-	// Store extra information in the Intent and go back to MainChatActivity
+	/**
+	 * Stores extra information about chosen User in the Intent and goes back to MainChatActivity
+	 *  
+	 * @param extraNameString is the Name of the User, we want to chat with
+	 * @param extraEmailString is the userID/JabberID of the User, we want to chat with
+	 */
 	private void changeActivityWithResult(String extraNameString, String extraEmailString)
 	{
 		Log.i("CHANGE ACTIVITY", "Changing acitivty now");
@@ -141,8 +161,8 @@ public class ChooseAccountActivity extends FragmentActivity implements LoaderCal
 	
 
 	/**
-	 * These next functions are required to implement LoaderCallbacks<Cursor> Interface: 
-	 * They load, update, and clean the cursor
+	 * These next 3 functions are required to implement LoaderCallbacks<Cursor> Interface: 
+	 * They load, update, and clean up the cursor
 	 */
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {

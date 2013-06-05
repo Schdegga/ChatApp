@@ -25,6 +25,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+/**
+ * This Activity represents a ChatRoom where two Users can chat with eachother
+ */
 @TargetApi(Build.VERSION_CODES.GINGERBREAD)
 public class ChatRoomActivity extends Activity {
 	
@@ -39,6 +42,13 @@ public class ChatRoomActivity extends Activity {
 	private Button sendButton;
 	private EditText messageInput;
 	
+	private final static String CHAT_ROOM_MESSAGE_LISTENER_TAG = "Chat Room Message Listener";
+	private final static String CHAT_ROOM_SEND_MESSAGE_TAG = "Chat Room Send Message";
+	
+	
+	/**
+	 * onCreate() Android Lifecycle Method
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -54,55 +64,107 @@ public class ChatRoomActivity extends Activity {
 		// Keep Track of Context
 		MainChatActivity.setContext(this);
 		
-		sendButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				sendMessage();
-			}
-		});
-		
 		setTitle(chatPartnerName); 
 		connection = Login.getConnection();
 		chatManager = connection.getChatManager();
+		Log.i("New Chat", "Creating chat with: " + chatPartnerEmail);
 		chat = chatManager.createChat(chatPartnerEmail, new MessageListener() {
 			@Override
 			public void processMessage(Chat chat, final Message message) {
-				if (message.getType() == Message.Type.chat)
-				{
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							adapter.add(message.getBody());
-							adapter.notifyDataSetChanged();
-						}
-					});
-					
-				}
+				handleIncomingMessage(chat, message);
 			}
 		});
 		sentMessages = new ArrayList<String>();
 		adapter = new ArrayAdapter<String>(this, R.layout.chat_view, R.id.chatViewTextView, sentMessages);
 		listView.setAdapter(adapter);
 		getOfflineMessages(intentThatStartedThisActivity.getStringArrayListExtra("messagesOutsideChatroom"));
-
+		
+		initialiseListeners();
 	}
 	
 	
 	
+	/**
+	 * Android Method
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.chat_room, menu);
+		return true;
+	}
+	
+	
+	
+	/**
+	 * Adds incoming Message to the ListView
+	 * 
+	 * @param chat is the Chat where the message came in
+	 * @param message is the Message Packet that was received
+	 */
+	protected void handleIncomingMessage(Chat chat, final Message message) 
+	{
+		Log.i(CHAT_ROOM_MESSAGE_LISTENER_TAG, "Message received from: " + message.getFrom() + " with Type: " + message.getType());
+		if (message.getType() == Message.Type.chat)
+		{
+			Log.i(CHAT_ROOM_MESSAGE_LISTENER_TAG, "Trying to add Message to adapter");
+			runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					Log.i(CHAT_ROOM_MESSAGE_LISTENER_TAG, "Is message.getBody() == null" + Boolean.toString(message.getBody() == null));
+					adapter.add(message.getBody());
+					adapter.notifyDataSetChanged();
+				}
+			});
+		}
+	}
+
+
+	
+	/**
+	 * Sets all Listeners
+	 */
+	private void initialiseListeners() 
+	{
+		sendButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sendMessage();
+			}
+		});
+	}
+	
+	
+	
+	/**
+	 * Retrieves Messages that came in, when we weren´t in the same ChatRoom with the User
+	 * 
+	 * @param stringArrayExtra are the stored Messages
+	 */
 	private void getOfflineMessages(ArrayList<String> stringArrayExtra) {
 		Log.i("ChatRoom", "Trying to get offline messages");
-		for(String s : stringArrayExtra)
+		for(final String s : stringArrayExtra)
 		{
-			adapter.add(s);
+			Log.i("ChatRoom", "Actual offline messages present");
+			runOnUiThread(new Runnable()
+			{
+				@Override
+				public void run() {
+					adapter.add(s);
+					adapter.notifyDataSetChanged();
+				}
+			});
 		}
-		//((BaseAdapter) listView.getAdapter()).notifyDataSetChanged();
 	}
 
 
 
+	/**
+	 * Sends content of the EditText messageInput to ChatPartner
+	 */
 	private void sendMessage()
 	{
-		String messageBody = messageInput.getText().toString();
+		final String messageBody = messageInput.getText().toString();
 		
 		if (! messageBody.isEmpty())
 		{
@@ -113,11 +175,11 @@ public class ChatRoomActivity extends Activity {
 				message.setBody(messageBody);
 				message.setType(Message.Type.chat);
 				chat.sendMessage(message);
-				adapter.add(messageBody);
-				runOnUiThread(new Runnable() {
-					
+				runOnUiThread(new Runnable()
+				{
 					@Override
 					public void run() {
+						adapter.add(messageBody);
 						adapter.notifyDataSetChanged();
 					}
 				});
@@ -131,18 +193,18 @@ public class ChatRoomActivity extends Activity {
 			}
 			catch (XMPPException e)
 			{
-				Log.e("MESSAGE SEND TAG", "Error when sending message to: " + chat.getParticipant());
+				Log.e(CHAT_ROOM_SEND_MESSAGE_TAG, "Error when sending message to: " + chat.getParticipant());
 				e.printStackTrace();
+			}
+			catch (IllegalStateException e)
+			{
+				Log.e(CHAT_ROOM_SEND_MESSAGE_TAG, "IllegalStateException");
+				Log.e(CHAT_ROOM_SEND_MESSAGE_TAG, e.toString());
+			}
+			catch (Exception e)
+			{
+				Log.e(CHAT_ROOM_SEND_MESSAGE_TAG, e.toString());
 			}
 		}
 	}
-	
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.chat_room, menu);
-		return true;
-	}
-
 }

@@ -30,10 +30,6 @@
             android:label="@string/title_activity_main_chat" >
         </activity>
         <activity
-            android:name="com.example.chatapp.MainActivity"
-            android:label="@string/title_activity_main" >
-        </activity>
-        <activity
             android:name="com.example.chatapp.ChooseAccountActivity"
             android:label="@string/title_activity_choose_account"
             android:windowSoftInputMode="adjustPan" >

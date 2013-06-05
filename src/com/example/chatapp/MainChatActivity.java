@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import org.jivesoftware.smack.ChatManager;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
@@ -83,9 +84,6 @@ public class MainChatActivity extends Activity {
 		context = this;
 		currentChatPartner = "";
 		
-		// Set Listeners
-		initialiseListeners();
-		
 		// Get all ChatPartners and load them into Array
 		Collection<RosterEntry> rosterEntries = chatPartners.getEntries();
 		for(RosterEntry e : rosterEntries)
@@ -96,6 +94,9 @@ public class MainChatActivity extends Activity {
 		// Set ListView - Adapter
 		adapter = new ArrayAdapter<ChatPartner>(this, R.layout.chat_partner_view, R.id.chat_partner_item_view, chats);
 		listView.setAdapter(adapter);
+		
+		initialiseListeners();
+				
 	}
 	
 	
@@ -197,7 +198,7 @@ public class MainChatActivity extends Activity {
 	 * @param viewContext is the Context, the ListView was clicked in
 	 * @param clickedUser is the User we want to chat with
 	 */
-	protected void handleShortListViewClick(Context viewContext, ChatPartner clickedUser) 
+	private void handleShortListViewClick(Context viewContext, ChatPartner clickedUser) 
 	{
 		Intent intent = new Intent(viewContext, ChatRoomActivity.class);
 		intent.putExtra("chosenChatPartnerEmail", clickedUser.getEmail());
@@ -219,7 +220,7 @@ public class MainChatActivity extends Activity {
 	 * @param clickedUser is the Item that was clicked
 	 * @return
 	 */
-	protected boolean handleLongListViewClick(Context viewContext, ChatPartner clickedUser) 
+	private boolean handleLongListViewClick(Context viewContext, ChatPartner clickedUser) 
 	{
 		//TODO Let User decide if he really wants to delete ChatPartner!
 		return removeUser(clickedUser);
@@ -284,7 +285,7 @@ public class MainChatActivity extends Activity {
 				break;
 
 			case unsubscribed:
-				showToast("User "+ sender +"unsubscribed from you and is deleted from your List");
+				showToast("User "+ sender +" unsubscribed from you and is deleted from your List");
 				removeUser(new ChatPartner(sender, chatPartners.getEntry(sender).getName()));
 				break;
 				
@@ -323,7 +324,6 @@ public class MainChatActivity extends Activity {
 		runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				new AlertDialog.Builder(context)
 				.setTitle("New Subscription Request")
 				.setMessage(sender + " sent a subscription request. Do you want to start chatting with this User?")
@@ -574,9 +574,96 @@ public class MainChatActivity extends Activity {
 		@Override
 		public boolean accept(Packet packet) 
 		{
-			String from = packet.getFrom().split("/")[0];
-			return (! from.equals(currentChatPartner));
+			if (packet.getClass() == Message.class)
+			{
+				String from = packet.getFrom().split("/")[0];
+				return (! from.equals(currentChatPartner));
+			}
+			return false;
 		}
 	}
+	
+	
+	
+	
+	/**
+	 * Implements an Interface for monitoring the XMPPConnection and handle close and closeOnError Events
+	 */
+	private class MyConnectionListener implements ConnectionListener{
 
+		/**
+		 * Disconnects properly from connection if it is not null
+		 */
+		void cleanupConnection()
+		{
+			if(connection != null)
+			{
+				Log.i("Connection", "disconnecting");
+				connection.disconnect();
+			}
+		}
+		
+		
+		
+		/**
+		 * 
+		 */
+		private void showConnectionLostDialog()
+		{
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					new AlertDialog.Builder(context)
+							.setTitle("Connection Lost")
+							.setMessage("Chat Server Connection was lost, please try to Login again")
+							.setCancelable(false)
+							.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									Intent backToLoginIntent = new Intent(context, Login.class);
+									cleanupConnection();
+									dialog.cancel();
+									startActivity(backToLoginIntent);
+								}
+							})
+							.setNegativeButton("Quit App", new DialogInterface.OnClickListener() {
+								
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									moveTaskToBack(true);
+								}
+							}).show();
+				}
+			});
+		}
+		
+		@Override
+		public void connectionClosed() {
+			Log.e("Connection", "Connection closed");
+			showConnectionLostDialog();
+		}
+
+		@Override
+		public void connectionClosedOnError(Exception e) {
+			Log.e("Connection", "Connection closed on Error");
+			Log.e("Connection", e.toString());
+			showConnectionLostDialog();
+		}
+
+		@Override
+		public void reconnectingIn(int arg0) {
+			//ignore
+		}
+
+		@Override
+		public void reconnectionFailed(Exception arg0) {
+			//ignore
+		}
+
+		@Override
+		public void reconnectionSuccessful() {
+			// ignore
+		}
+	}
 }
