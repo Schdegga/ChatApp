@@ -177,6 +177,8 @@ public class MainChatActivity extends Activity {
 			}
 		});
 		
+		
+		
 		// Let User choose account from his phonebook
 		addButton.setOnClickListener(new View.OnClickListener() 
 		{
@@ -188,6 +190,9 @@ public class MainChatActivity extends Activity {
 				startActivityForResult(intent, PICK_ACCOUNT_REQUEST);
 			}
 		});
+		
+		// Handle Connection Losses
+        connection.addConnectionListener(new MyConnectionListener());
 	}
 
 	
