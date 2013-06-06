@@ -1,6 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/LinearLayout1"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,6 +10,8 @@
         android:id="@+id/chatRoomListView"
         android:layout_width="match_parent"
         android:layout_height="458dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:paddingLeft="10dp"
         android:stackFromBottom="true"
         android:textAlignment="center"
@@ -17,16 +19,18 @@
     </ListView>
 
     <RelativeLayout
+        android:id="@+id/RelativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:background="@android:color/holo_red_light" >
 
         <EditText
             android:id="@+id/chatRoomMessageText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:layout_toLeftOf="@+id/chatRoomSendMessageButton"
             android:ems="10"
             android:imeOptions="actionDone"
@@ -46,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_alignParentTop="true"
             android:background="@drawable/button_red_light"
             android:gravity="center"
             android:text=">"
@@ -54,7 +58,6 @@
             android:textSize="30sp"
             android:textStyle="normal"
             android:typeface="monospace" />
-
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
