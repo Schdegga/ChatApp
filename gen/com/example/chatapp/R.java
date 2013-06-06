@@ -27,7 +27,7 @@ public final class R {
     }
     public static final class id {
         public static final int FirstLayout=0x7f080007;
-        public static final int RelativeLayout1=0x7f080002;
+        public static final int LinearLayout1=0x7f080002;
         public static final int SecondLayout=0x7f08000a;
         public static final int accountList=0x7f080009;
         public static final int action_settings=0x7f080018;
@@ -35,7 +35,7 @@ public final class R {
         public static final int addNewUserButton=0x7f08000e;
         public static final int chatPartners=0x7f080014;
         public static final int chatRoomListView=0x7f080003;
-        public static final int chatRoomMessageText=0x7f080006;
+        public static final int chatRoomMessageText=0x7f080004;
         public static final int chatRoomSendMessageButton=0x7f080005;
         public static final int chatViewTextView=0x7f080017;
         public static final int chat_partner_item_view=0x7f080016;
@@ -50,7 +50,7 @@ public final class R {
         public static final int textView2=0x7f08000d;
         public static final int usernameInput=0x7f080010;
         public static final int usernameTextView=0x7f080000;
-        public static final int view1=0x7f080004;
+        public static final int view1=0x7f080006;
     }
     public static final class layout {
         public static final int account_view=0x7f030000;
