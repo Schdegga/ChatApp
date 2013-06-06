@@ -24,7 +24,6 @@ import android.widget.ListView;
  * This Activity lets the User choose an Account with a gmail account. The Result is given back to the MainChatActivity
  * Example that was used: http://developer.android.com/training/contacts-provider/index.html
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class ChooseAccountActivity extends FragmentActivity implements LoaderCallbacks<Cursor>
 {
 	// Stores the query Data for ListView Adapter

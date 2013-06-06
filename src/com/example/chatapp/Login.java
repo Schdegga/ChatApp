@@ -186,7 +186,7 @@ public class Login extends Activity {
 					newConnection.login("dampfhans", "1234567");
 					Log.i(USER_LOGIN_TAG, "Logged in as: " + newConnection.getUser());
 					dialog.dismiss();
-					startChatting(connection);
+					startChatting(newConnection);
 				}
 				catch (XMPPException e)
 				{
