@@ -605,6 +605,7 @@ public class MainChatActivity extends Activity {
 			{
 				Log.i("Connection", "disconnecting");
 				connection.disconnect();
+				connection=null;
 			}
 		}
 		
@@ -627,8 +628,8 @@ public class MainChatActivity extends Activity {
 								@Override
 								public void onClick(DialogInterface dialog, int which) {
 									Intent backToLoginIntent = new Intent(context, Login.class);
+									dialog.dismiss();
 									cleanupConnection();
-									dialog.cancel();
 									startActivity(backToLoginIntent);
 								}
 							})

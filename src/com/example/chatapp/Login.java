@@ -55,6 +55,7 @@ public class Login extends Activity {
 		usernameInput = (EditText) findViewById(R.id.usernameInput);
 		passwordInput = (EditText) findViewById(R.id.passwordInput);
 		login = (Button) findViewById(R.id.loginButton);
+		connection = null;
 		
 		login.setOnClickListener(new View.OnClickListener() {
 			
@@ -164,11 +165,11 @@ public class Login extends Activity {
 				// Connect to Server
 				SmackAndroid.init(Login.this);
 				AndroidConnectionConfiguration config = new AndroidConnectionConfiguration(HOST, PORT, "qip.ru");
-				XMPPConnection connection = new XMPPConnection(config);
+				XMPPConnection newConnection = new XMPPConnection(config);
 				try 
 				{
-					connection.connect();
-					Log.i(SERVER_CONNECTION_TAG, "Successfully connected to Server at " + connection.getHost());
+					newConnection.connect();
+					Log.i(SERVER_CONNECTION_TAG, "Successfully connected to Server at " + newConnection.getHost());
 					SASLAuthentication.supportSASLMechanism("PLAIN", 0);
 				} 
 				catch (XMPPException e) 
@@ -182,8 +183,8 @@ public class Login extends Activity {
 				{
 					//TODO: Use real Username and Password
 					// If your username is "username@service", just login with username and leave out @service
-					connection.login("dampfhans", "1234567");
-					Log.i(USER_LOGIN_TAG, "Logged in as: " + connection.getUser());
+					newConnection.login("dampfhans", "1234567");
+					Log.i(USER_LOGIN_TAG, "Logged in as: " + newConnection.getUser());
 					dialog.dismiss();
 					startChatting(connection);
 				}
