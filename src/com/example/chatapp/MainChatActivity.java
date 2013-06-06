@@ -127,6 +127,21 @@ public class MainChatActivity extends Activity {
 	
 	
 	/**
+	 * If the User presses back, he will be logged out from Server
+	 */
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		if (connection != null)
+		{
+			connection.disconnect();
+			connection = null;
+		}
+	}
+	
+	
+	
+	/**
 	 * Sets all Listeners
 	 */
 	private void initialiseListeners() 
@@ -607,6 +622,15 @@ public class MainChatActivity extends Activity {
 				connection.disconnect();
 				connection=null;
 			}
+			else
+			{
+				connection = Login.getConnection();
+				if (connection != null)
+				{
+					connection.disconnect();
+					connection = null;
+				}
+			}
 		}
 		
 		
@@ -629,8 +653,11 @@ public class MainChatActivity extends Activity {
 								public void onClick(DialogInterface dialog, int which) {
 									Intent backToLoginIntent = new Intent(context, Login.class);
 									dialog.dismiss();
-									cleanupConnection();
+									cleanupConnection();									
+									((Activity) context).finish();
+									MainChatActivity.this.finish();									
 									startActivity(backToLoginIntent);
+									
 								}
 							})
 							.setNegativeButton("Quit App", new DialogInterface.OnClickListener() {
@@ -647,14 +674,22 @@ public class MainChatActivity extends Activity {
 		@Override
 		public void connectionClosed() {
 			Log.e("Connection", "Connection closed");
-			showConnectionLostDialog();
+			if (!connection.isConnected())
+			{
+				connection.removeConnectionListener(this);
+				showConnectionLostDialog();
+			}
 		}
 
 		@Override
 		public void connectionClosedOnError(Exception e) {
 			Log.e("Connection", "Connection closed on Error");
 			Log.e("Connection", e.toString());
-			showConnectionLostDialog();
+			if (!connection.isConnected())
+			{
+				connection.removeConnectionListener(this);
+				showConnectionLostDialog();
+			}
 		}
 
 		@Override
