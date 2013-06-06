@@ -1,80 +1,58 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
     tools:context=".ChatRoomActivity" >
-    
-    <RelativeLayout
-        android:id="@+id/chatRoomRelativeLayout1"
+
+    <ListView
+        android:id="@+id/chatRoomListView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:fitsSystemWindows="true"
-        android:visibility="visible"
-        android:paddingTop="5dp" >
+        android:layout_height="458dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="10dp"
+        android:stackFromBottom="true"
+        android:textAlignment="center"
+        android:transcriptMode="alwaysScroll" >
+    </ListView>
 
-        <ListView
-            android:id="@+id/chatRoomListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:minHeight="50dp"
-            android:paddingLeft="10dp"
-            android:stackFromBottom="true"
-            android:textAlignment="center"
-            android:transcriptMode="alwaysScroll" >
-
-        </ListView>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/chatRoomRelativeLayout2"
+    <View
+        android:id="@+id/view1"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-        
-         <View
-            android:id="@+id/view1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignTop="@+id/chatRoomSendMessageButton"
-            android:background="@android:color/holo_red_light" />
-        
-        <Button
-            android:id="@+id/chatRoomSendMessageButton"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/chatRoomMessageText"
-            android:background="@drawable/button_red_light"
-            android:gravity="center"
-            android:text=">"
-            android:textColor="@android:color/white"
-            android:textSize="30dp"
-            android:textStyle="normal"
-            android:typeface="monospace" />
-        
-        <EditText
-            android:id="@+id/chatRoomMessageText"
-            android:layout_width="246dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/chatRoomSendMessageButton"
-            android:ems="10"
-            android:inputType="textMultiLine"
-            android:textColor="@android:color/white" >
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/chatRoomListView"
+        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/chatRoomSendMessageButton"
+        android:background="@android:color/holo_red_light" />
 
-        </EditText>
+    <Button
+        android:id="@+id/chatRoomSendMessageButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/button_red_light"
+        android:gravity="center"
+        android:text=">"
+        android:textColor="@android:color/white"
+        android:textSize="30dp"
+        android:textStyle="normal"
+        android:typeface="monospace" />
 
-    </RelativeLayout>
+    <EditText
+        android:id="@+id/chatRoomMessageText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/chatRoomSendMessageButton"
+        android:layout_alignBottom="@+id/chatRoomSendMessageButton"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/chatRoomSendMessageButton"
+        android:ems="10"
+        android:imeOptions="actionDone"
+        android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+        android:textColor="@android:color/white" />
 
-</LinearLayout>
+</RelativeLayout>

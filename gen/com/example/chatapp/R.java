@@ -26,32 +26,31 @@ public final class R {
         public static final int ic_launcher=0x7f020002;
     }
     public static final class id {
-        public static final int FirstLayout=0x7f080008;
-        public static final int SecondLayout=0x7f08000b;
-        public static final int accountList=0x7f08000a;
-        public static final int action_settings=0x7f080019;
-        public static final int addChatPartner=0x7f080016;
-        public static final int addNewUserButton=0x7f08000f;
-        public static final int chatPartners=0x7f080015;
+        public static final int FirstLayout=0x7f080007;
+        public static final int RelativeLayout1=0x7f080002;
+        public static final int SecondLayout=0x7f08000a;
+        public static final int accountList=0x7f080009;
+        public static final int action_settings=0x7f080018;
+        public static final int addChatPartner=0x7f080015;
+        public static final int addNewUserButton=0x7f08000e;
+        public static final int chatPartners=0x7f080014;
         public static final int chatRoomListView=0x7f080003;
-        public static final int chatRoomMessageText=0x7f080007;
-        public static final int chatRoomRelativeLayout1=0x7f080002;
-        public static final int chatRoomRelativeLayout2=0x7f080004;
-        public static final int chatRoomSendMessageButton=0x7f080006;
-        public static final int chatViewTextView=0x7f080018;
-        public static final int chat_partner_item_view=0x7f080017;
+        public static final int chatRoomMessageText=0x7f080006;
+        public static final int chatRoomSendMessageButton=0x7f080005;
+        public static final int chatViewTextView=0x7f080017;
+        public static final int chat_partner_item_view=0x7f080016;
         public static final int emailTextView=0x7f080001;
-        public static final int imageView1=0x7f080013;
-        public static final int loginButton=0x7f080014;
-        public static final int loginMessage=0x7f080012;
-        public static final int newUserEmailInput=0x7f08000d;
-        public static final int newUserNameInput=0x7f08000c;
-        public static final int passwordInput=0x7f080010;
-        public static final int textView1=0x7f080009;
-        public static final int textView2=0x7f08000e;
-        public static final int usernameInput=0x7f080011;
+        public static final int imageView1=0x7f080012;
+        public static final int loginButton=0x7f080013;
+        public static final int loginMessage=0x7f080011;
+        public static final int newUserEmailInput=0x7f08000c;
+        public static final int newUserNameInput=0x7f08000b;
+        public static final int passwordInput=0x7f08000f;
+        public static final int textView1=0x7f080008;
+        public static final int textView2=0x7f08000d;
+        public static final int usernameInput=0x7f080010;
         public static final int usernameTextView=0x7f080000;
-        public static final int view1=0x7f080005;
+        public static final int view1=0x7f080004;
     }
     public static final class layout {
         public static final int account_view=0x7f030000;

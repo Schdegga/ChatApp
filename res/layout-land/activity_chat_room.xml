@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ChatRoomActivity" >
+
+    <ListView
+        android:id="@+id/chatRoomListView"
+        android:layout_width="match_parent"
+        android:layout_height="248dp"
+        android:paddingLeft="10dp"
+        android:stackFromBottom="true"
+        android:textAlignment="center"
+        android:transcriptMode="alwaysScroll" >
+    </ListView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="39dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/holo_red_light" />
+
+        <EditText
+            android:id="@+id/chatRoomMessageText"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_toLeftOf="@+id/chatRoomSendMessageButton"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:textColor="@android:color/white"
+            android:imeOptions="actionDone" >
+
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/chatRoomSendMessageButton"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/button_red_light"
+            android:gravity="center"
+            android:text=">"
+            android:textColor="@android:color/white"
+            android:textSize="30dp"
+            android:textStyle="normal"
+            android:typeface="monospace" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -16,14 +16,17 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * This Activity represents a ChatRoom where two Users can chat with eachother
@@ -131,6 +134,17 @@ public class ChatRoomActivity extends Activity {
 			public void onClick(View v) {
 				sendMessage();
 			}
+		});
+		
+		//listen to softkeyboard done-button
+		messageInput.setOnEditorActionListener(new OnEditorActionListener() {
+		    @Override
+		    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+		        if (actionId == EditorInfo.IME_ACTION_DONE) {
+		            sendMessage();
+		        }
+		        return false;
+		    }
 		});
 	}
 	
