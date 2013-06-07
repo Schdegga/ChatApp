@@ -22,10 +22,13 @@ import org.jivesoftware.smackx.search.UserSearchManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -59,6 +62,8 @@ public class MainChatActivity extends Activity {
 	private static Context context;
 	private ArrayAdapter<ChatPartner> adapter;
 	private String currentChatPartner;
+	private NotificationManager notifyer;
+	private int notificationID = 1;
 
 	
 	/**
@@ -78,6 +83,7 @@ public class MainChatActivity extends Activity {
 		listView = (ListView) findViewById(R.id.chatPartners);
 		context = this;
 		currentChatPartner = "";
+		notifyer = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		
 		// Get all ChatPartners and load them into Array
 		Collection<RosterEntry> rosterEntries = chatPartners.getEntries();
@@ -117,6 +123,20 @@ public class MainChatActivity extends Activity {
 	public static void setContext(Context newContext)
 	{
 		context = newContext;
+	}
+	
+	
+	
+	/**
+	 * Sets up a notificationBuilder that is shown when there is an incoming message
+	 */
+	private NotificationCompat.Builder getNotificationBuilder(Context context, String userID)
+	{
+		return new NotificationCompat.Builder(context)
+							.setSmallIcon(R.drawable.ic_launcher)
+							.setContentTitle("New Message")
+							.setContentText("New Message received from " + userID)
+							.setNumber(notificationID);
 	}
 	
 	
@@ -266,6 +286,7 @@ public class MainChatActivity extends Activity {
 			// Add Message to "offlineMessages" of the corresponding ChatPartner
 			Log.i("MESSAGE HANDLER", "Sent Message to " + chats.get(index).getEmail());
 			chats.get(index).addMessage(message.getBody());
+			notifyer.notify(notificationID, getNotificationBuilder(context, message.getFrom().split("/")[0]).build());
 		}
 		
 	}
