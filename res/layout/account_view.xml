@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="18dp"
-        android:text="Large Text"
+        android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -20,6 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/usernameTextView"
         android:layout_centerHorizontal="true"
-        android:text="TextView" />
+        android:text="" />
 
 </RelativeLayout>

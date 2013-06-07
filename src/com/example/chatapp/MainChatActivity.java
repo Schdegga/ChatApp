@@ -3,9 +3,7 @@ package com.example.chatapp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
 
-import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
@@ -33,10 +31,8 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -60,7 +56,6 @@ public class MainChatActivity extends Activity {
 	private XMPPConnection connection;
 	private Roster		   chatPartners;
 	private ArrayList<ChatPartner> chats;
-	private ChatManager    chatManager;
 	private static Context context;
 	private ArrayAdapter<ChatPartner> adapter;
 	private String currentChatPartner;
@@ -305,7 +300,7 @@ public class MainChatActivity extends Activity {
 				break;
 
 			case unsubscribed:
-				showToast("User "+ sender +" unsubscribed from you and is deleted from your List");
+				showToast("User "+ sender +" unsubscribed from you and is deleted from your List", false);
 				removeUser(new ChatPartner(sender, chatPartners.getEntry(sender).getName()));
 				break;
 				
@@ -320,15 +315,17 @@ public class MainChatActivity extends Activity {
 	
 	/**
 	 * Displays a Toast on the UI Thread
+	 * @param long 
 	 * 
 	 * @param string the Messages which is posted
 	 */
-	private void showToast(final String message) {
+	private void showToast(final String message, final boolean longToastLength) {
 		runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
-				Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+				int toast_length = longToastLength ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT;
+				Toast.makeText(context, message, toast_length).show();
 			}
 		});
 	}

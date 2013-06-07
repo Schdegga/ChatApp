@@ -70,11 +70,22 @@ public final class R {
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
+        public static final int add_user=0x7f050009;
+        public static final int add_user_icon=0x7f050010;
         public static final int app_name=0x7f050000;
-        public static final int title_activity_chat_room=0x7f050005;
-        public static final int title_activity_choose_account=0x7f050004;
-        public static final int title_activity_main=0x7f050003;
+        public static final int choose_from_your_existing_contacts=0x7f050005;
+        public static final int contacts=0x7f05000f;
+        public static final int login=0x7f05000e;
+        public static final int or_add_a_new_contact=0x7f050007;
+        public static final int password=0x7f05000b;
+        public static final int please_login_with_your_jabber_account=0x7f05000d;
+        public static final int send_icon=0x7f05000a;
+        public static final int title_activity_chat_room=0x7f050004;
+        public static final int title_activity_choose_account=0x7f050003;
         public static final int title_activity_main_chat=0x7f050002;
+        public static final int user_name_for_chatting=0x7f050006;
+        public static final int user_qip_ru=0x7f050008;
+        public static final int username=0x7f05000c;
     }
     public static final class style {
         /** 

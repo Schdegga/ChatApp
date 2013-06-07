@@ -13,7 +13,7 @@
         android:layout_below="@id/usernameInput"
         android:layout_marginTop="28dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword" />
 
     <EditText
@@ -24,7 +24,7 @@
         android:layout_below="@+id/loginMessage"
         android:layout_marginTop="42dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="@string/username"
         android:inputType="textEmailAddress" >
 
         <requestFocus />
@@ -50,7 +50,7 @@
         android:background="@android:color/holo_red_light"
         android:gravity="center"
         android:padding="20dp"
-        android:text="Please login with your Jabber Account"
+        android:text="@string/please_login_with_your_jabber_account"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
         android:textColorLink="@android:color/white"
@@ -65,7 +65,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
         android:background="@android:color/holo_blue_light"
-        android:text="Login"
+        android:text="@string/login"
         android:textColor="@android:color/white" />
 
 </RelativeLayout>

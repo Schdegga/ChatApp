@@ -14,7 +14,7 @@
  	    android:layout_alignParentTop="true"
  	    android:background="@android:color/holo_red_light"
  	    android:gravity="center"
- 	    android:text="Contacts"
+ 	    android:text="@string/contacts"
  	    android:textAppearance="?android:attr/textAppearanceLarge"
  	    android:textColor="@android:color/white" />
  	<Button
@@ -24,7 +24,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/button_red_light"
-        android:text="+"
+        android:text="@string/add_user_icon"
         android:textColor="@android:color/white"
         android:textSize="40sp"
         android:textStyle="normal"

@@ -23,7 +23,7 @@
 	        android:background="@android:color/holo_red_light"
 	        android:gravity="center"
 	        android:padding="10dp"
-	        android:text="Choose from your existing Contacts"
+	        android:text="@string/choose_from_your_existing_contacts"
 	        android:textColor="@android:color/white"
 	        android:textStyle="normal"
 	        android:typeface="sans" />
@@ -55,7 +55,7 @@
             android:layout_marginRight="26dp"
             android:layout_marginTop="12dp"
             android:background="@android:color/holo_blue_light"
-            android:text="Add User"
+            android:text="@string/add_user"
             android:textColor="@android:color/white" />
 
         <EditText
@@ -65,7 +65,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/newUserEmailInput"
             android:ems="10"
-            android:hint="User name for chatting"
+            android:hint="@string/user_name_for_chatting"
             android:singleLine="true" />
 
         <TextView
@@ -77,7 +77,7 @@
             android:background="@android:color/holo_red_light"
             android:gravity="center"
             android:padding="10dp"
-            android:text="Or add a new Contact"
+            android:text="@string/or_add_a_new_contact"
             android:textColor="@android:color/white"
             android:textStyle="normal"
             android:typeface="sans" />
@@ -89,7 +89,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:ems="10"
-            android:hint="user@gmail.com"
+            android:hint="@string/user_qip_ru"
             android:inputType="textEmailAddress" />
 
     </RelativeLayout>
