@@ -27,17 +27,23 @@
         </activity>
         <activity
             android:name="com.example.chatapp.MainChatActivity"
-            android:label="@string/title_activity_main_chat" >
+            android:label="@string/title_activity_main_chat"
+            android:screenOrientation="portrait" 
+            android:configChanges="orientation|keyboardHidden" >
         </activity>
         <activity
             android:name="com.example.chatapp.ChooseAccountActivity"
             android:label="@string/title_activity_choose_account"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait" 
+            android:configChanges="orientation|keyboardHidden" >
         </activity>
         <activity
             android:name="com.example.chatapp.ChatRoomActivity"
             android:label="@string/title_activity_chat_room" 
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait" 
+            android:configChanges="orientation|keyboardHidden">
         </activity>
     </application>
 </manifest>

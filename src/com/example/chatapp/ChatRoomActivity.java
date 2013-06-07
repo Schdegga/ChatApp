@@ -116,8 +116,11 @@ public class ChatRoomActivity extends Activity {
 				@Override
 				public void run() {
 					Log.i(CHAT_ROOM_MESSAGE_LISTENER_TAG, "Is message.getBody() == null" + Boolean.toString(message.getBody() == null));
-					adapter.add(message.getBody());
-					adapter.notifyDataSetChanged();
+					if (message.getBody() != null)
+					{
+						adapter.add(message.getBody());
+						adapter.notifyDataSetChanged();
+					}
 				}
 			});
 		}
