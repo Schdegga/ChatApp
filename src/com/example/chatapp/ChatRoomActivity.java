@@ -13,6 +13,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,7 +64,7 @@ public class ChatRoomActivity extends Activity {
 		listView = (ListView) findViewById(R.id.chatRoomListView);
 		sendButton = (Button) findViewById(R.id.chatRoomSendMessageButton);
 		messageInput = (EditText) findViewById(R.id.chatRoomMessageText);
-		
+				
 		// Keep Track of Context
 		MainChatActivity.setContext(this);
 		
@@ -220,5 +221,19 @@ public class ChatRoomActivity extends Activity {
 				Log.e(CHAT_ROOM_SEND_MESSAGE_TAG, e.toString());
 			}
 		}
+	}
+	
+	
+	
+	
+	/**
+	 * Save written Messages to ChatPartners message ArrayList when ChatRoom is left
+	 */
+	@Override
+	public void onBackPressed() {
+		Intent data = new Intent();
+		data.putStringArrayListExtra("Messages", sentMessages);
+		setResult(RESULT_OK, data);
+		super.onBackPressed();
 	}
 }

@@ -64,6 +64,11 @@ public class ChatPartner {
 			return false;
 		return true;
 	}
+
+	public void updateMessages(ArrayList<String> messages) 
+	{
+		this.messages = messages;
+	}
 	
 	
 }

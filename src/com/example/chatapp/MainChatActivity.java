@@ -382,7 +382,8 @@ public class MainChatActivity extends Activity {
 
 	
 	/**
-	 *  Is Called when another Activity returns. Adds chosen User to Roster if he exists.
+	 *  Is Called when another Activity returns. Adds chosen User to Roster if he exists or updates Messages
+	 *  ArrayList for the User we were just in the ChatRoom with
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -390,7 +391,6 @@ public class MainChatActivity extends Activity {
 	    
 	    // Keep Track of Context
 	    context = this;
-	    currentChatPartner = "";
 	    
 		switch(requestCode) 
 		{
@@ -410,10 +410,19 @@ public class MainChatActivity extends Activity {
 					Toast.makeText(this, "No User Selected", Toast.LENGTH_SHORT).show();
 				}
 				break;
+			
+			case CHAT_ROOM_REQUEST:
+				ArrayList<String> messages = data.getStringArrayListExtra("Messages");
+				int chatPartnerIndex = getChatIndex(currentChatPartner);
+				chats.get(chatPartnerIndex).updateMessages(messages);
+				break;
 				
 			default:
 				Log.i("Context Tracker", "Returned to MainChatActivity");
 		}
+		
+		// Keep track of chatPartner
+		currentChatPartner = "";
 	}
 
 
@@ -673,12 +682,12 @@ public class MainChatActivity extends Activity {
 		
 		@Override
 		public void connectionClosed() {
-			Log.e("Connection", "Connection closed");
-			if (!connection.isConnected())
-			{
-				connection.removeConnectionListener(this);
-				showConnectionLostDialog();
-			}
+//			Log.e("Connection", "Connection closed");
+//			if (!connection.isConnected())
+//			{
+//				connection.removeConnectionListener(this);
+//				showConnectionLostDialog();
+//			}
 		}
 
 		@Override
