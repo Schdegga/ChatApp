@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
@@ -22,7 +21,6 @@ import org.jivesoftware.smackx.search.UserSearchManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,8 +28,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -95,7 +96,7 @@ public class MainChatActivity extends Activity {
 		// Set ListView - Adapter
 		adapter = new ArrayAdapter<ChatPartner>(this, R.layout.chat_partner_view, R.id.chat_partner_item_view, chats);
 		listView.setAdapter(adapter);
-		
+		registerForContextMenu(listView);
 		initialiseListeners();
 				
 	}
@@ -110,6 +111,38 @@ public class MainChatActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_chat, menu);
 		return true;
+	}
+	
+	
+	
+	/**
+	 * Creates Context Menu for ListView
+	 */
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) 
+	{
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add("Delete User");
+	}
+	
+	
+	
+	
+	/**
+	 * Handles Context Menu Item clicks
+	 */
+	@Override
+	public boolean onContextItemSelected(MenuItem item) 
+	{
+		 super.onContextItemSelected(item);
+		 if (item.getTitle().equals("Delete User"))
+		 {
+			 AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+			 removeUser(chats.get(info.position));
+		 }
+		 
+		 return true;
 	}
 	
 	
@@ -181,20 +214,7 @@ public class MainChatActivity extends Activity {
 			}
 		}, new MyPacketFilter());
 		
-		// Handle ListItem Clicks
-		// Long Clicks
-		listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() 
-		{
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) 
-			{
-				ChatPartner clickedUser = (ChatPartner) parent.getItemAtPosition(position);
-				return handleLongListViewClick(view.getContext(), clickedUser);
-			}
-		});
-		
-		// Short Clicks
+		// Handle short ListView Clicks
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() 
 		{
 			@Override
@@ -220,9 +240,6 @@ public class MainChatActivity extends Activity {
 				startActivityForResult(intent, PICK_ACCOUNT_REQUEST);
 			}
 		});
-		
-		// Handle Connection Losses
-        connection.addConnectionListener(new MyConnectionListener());
 	}
 
 	
@@ -246,21 +263,6 @@ public class MainChatActivity extends Activity {
 		startActivityForResult(intent, CHAT_ROOM_REQUEST);
 	}
 
-	
-
-	/**
-	 * Deletes User on long Item Click in ListView
-	 * 
-	 * @param viewContext is the Context, the ListView was clicked in
-	 * @param clickedUser is the Item that was clicked
-	 * @return
-	 */
-	private boolean handleLongListViewClick(Context viewContext, ChatPartner clickedUser) 
-	{
-		//TODO Let User decide if he really wants to delete ChatPartner!
-		return removeUser(clickedUser);
-	}
-
 
 	
 	/**
@@ -272,7 +274,7 @@ public class MainChatActivity extends Activity {
 		
 		Log.i("MESSAGE HANDLER", "Message received");
 		Message message = (Message) packet;
-		Log.i("MESSAGE HANDLER", "Message from " + message.getFrom());
+		Log.i("MESSAGE HANDLER", "Message from " + message.getFrom() + " with type: " + message.getType());
 		// Split getFrom()-String or else "user@qip.ru/HOST" is returned, which isn´t found
 		int index = getChatIndex(message.getFrom().split("/")[0]);
 		
@@ -284,11 +286,17 @@ public class MainChatActivity extends Activity {
 		else
 		{
 			// Add Message to "offlineMessages" of the corresponding ChatPartner
-			Log.i("MESSAGE HANDLER", "Sent Message to " + chats.get(index).getEmail());
-			chats.get(index).addMessage(message.getBody());
-			notifyer.notify(notificationID, getNotificationBuilder(context, message.getFrom().split("/")[0]).build());
+			Log.i("MESSAGE HANDLER", "Added Message to " + chats.get(index).getEmail()+"´s ChatRoom");
+			if (message.getBody() != null)
+			{
+				chats.get(index).addMessage(message.getBody());
+				notifyer.notify(notificationID, getNotificationBuilder(context, message.getFrom().split("/")[0]).build());
+			}
+			else
+			{
+				Log.i("MESSAGE HANDLER", "Message Body was null");
+			}
 		}
-		
 	}
 
 
@@ -527,7 +535,6 @@ public class MainChatActivity extends Activity {
 				}
 			}
 		});
-
 		return true;
 	}
 	
@@ -568,16 +575,9 @@ public class MainChatActivity extends Activity {
 				{
 					Row row = iter.next();
                 	Iterator iterator = row.getValues("jid");
-                    if(iterator.hasNext())
+                    if(iterator.hasNext() && iterator.next().toString().equals(userID) && !iter.hasNext())
                     {
-                        String value = iterator.next().toString();
-                        Log.i("Iterator values......"," "+value);
-                    }
-                    
-                    // If there is more than 1 column, there are more Users that match the search 
-                    if (!iter.hasNext())
-                    {
-        				Toast.makeText(this, "User " + userID + " exists!", Toast.LENGTH_SHORT).show();
+        				Toast.makeText(this, "User " + userID + " exists and is added to your Chat Partners!", Toast.LENGTH_SHORT).show();
                     	return true;
                     }
                     else
@@ -627,111 +627,6 @@ public class MainChatActivity extends Activity {
 				return (! from.equals(currentChatPartner));
 			}
 			return false;
-		}
-	}
-	
-	
-	
-	
-	/**
-	 * Implements an Interface for monitoring the XMPPConnection and handle close and closeOnError Events
-	 */
-	private class MyConnectionListener implements ConnectionListener{
-
-		/**
-		 * Disconnects properly from connection if it is not null
-		 */
-		void cleanupConnection()
-		{
-			if(connection != null)
-			{
-				Log.i("Connection", "disconnecting");
-				connection.disconnect();
-				connection=null;
-			}
-			else
-			{
-				connection = Login.getConnection();
-				if (connection != null)
-				{
-					connection.disconnect();
-					connection = null;
-				}
-			}
-		}
-		
-		
-		
-		/**
-		 * 
-		 */
-		private void showConnectionLostDialog()
-		{
-			runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					new AlertDialog.Builder(context)
-							.setTitle("Connection Lost")
-							.setMessage("Chat Server Connection was lost, please try to Login again")
-							.setCancelable(false)
-							.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									Intent backToLoginIntent = new Intent(context, Login.class);
-									dialog.dismiss();
-									cleanupConnection();									
-									((Activity) context).finish();
-									MainChatActivity.this.finish();									
-									startActivity(backToLoginIntent);
-									
-								}
-							})
-							.setNegativeButton("Quit App", new DialogInterface.OnClickListener() {
-								
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									moveTaskToBack(true);
-								}
-							}).show();
-				}
-			});
-		}
-		
-		@Override
-		public void connectionClosed() {
-//			Log.e("Connection", "Connection closed");
-//			if (!connection.isConnected())
-//			{
-//				connection.removeConnectionListener(this);
-//				showConnectionLostDialog();
-//			}
-		}
-
-		@Override
-		public void connectionClosedOnError(Exception e) {
-			Log.e("Connection", "Connection closed on Error");
-			Log.e("Connection", e.toString());
-			if (!connection.isConnected())
-			{
-				connection.removeConnectionListener(this);
-				showConnectionLostDialog();
-			}
-		}
-
-		@Override
-		public void reconnectingIn(int arg0) {
-			//ignore
-		}
-
-		@Override
-		public void reconnectionFailed(Exception arg0) {
-			//ignore
-		}
-
-		@Override
-		public void reconnectionSuccessful() {
-			// ignore
 		}
 	}
 }

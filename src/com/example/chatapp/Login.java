@@ -123,8 +123,6 @@ public class Login extends Activity {
 													@Override
 													public void onClick(DialogInterface dialog, int which) {
 														dialog.cancel();
-														usernameInput.setText("");
-														passwordInput.setText("");
 													}
 												})
 												.show();
@@ -141,6 +139,16 @@ public class Login extends Activity {
 			Intent intent = new Intent(this, MainChatActivity.class);
 			startActivity(intent);
 		}
+		
+		// Clear EditTexts 
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				usernameInput.setText("");
+				passwordInput.setText("");
+			}
+		});
 	}
 	
 	
@@ -173,15 +181,15 @@ public class Login extends Activity {
 				catch (XMPPException e) 
 				{
 					Log.e(SERVER_CONNECTION_TAG, e.toString());
+					dialog.dismiss();
 					startChatting(null);
 				}
 				
 				// Login User
 				try 
 				{
-					//TODO: Use real Username and Password
 					// If your username is "username@service", just login with username and leave out @service
-					newConnection.login("dampfhans", "1234567");
+					newConnection.login(username.split("@")[0], password);
 					Log.i(USER_LOGIN_TAG, "Logged in as: " + newConnection.getUser());
 					dialog.dismiss();
 					startChatting(newConnection);
@@ -190,12 +198,14 @@ public class Login extends Activity {
 				{
 					Log.e(USER_LOGIN_TAG, e.toString());
 					e.printStackTrace();
+					dialog.dismiss();
 					startChatting(null);
 				}
 				catch (Exception e)
 				{
 					Log.e(USER_LOGIN_TAG, e.toString());
 					e.printStackTrace();
+					dialog.dismiss();
 					startChatting(null);
 				}
 			}

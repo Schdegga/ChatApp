@@ -26,7 +26,7 @@
         android:background="@android:color/holo_red_light"
         android:gravity="center"
         android:padding="20dp"
-        android:text="@string/please_login_with_your_jabber_account"
+        android:text="@string/please_login_with_your_qip_account"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
         android:textColorLink="@android:color/white"

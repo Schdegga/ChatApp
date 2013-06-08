@@ -78,7 +78,7 @@ public final class R {
         public static final int login=0x7f05000e;
         public static final int or_add_a_new_contact=0x7f050007;
         public static final int password=0x7f05000b;
-        public static final int please_login_with_your_jabber_account=0x7f05000d;
+        public static final int please_login_with_your_qip_account=0x7f05000d;
         public static final int send_icon=0x7f05000a;
         public static final int title_activity_chat_room=0x7f050004;
         public static final int title_activity_choose_account=0x7f050003;

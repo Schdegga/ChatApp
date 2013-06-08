@@ -14,7 +14,7 @@
     <string name="send_icon">></string>
     <string name="password">Password</string>
     <string name="username">Username</string>
-    <string name="please_login_with_your_jabber_account">Please login with your Jabber Account</string>
+    <string name="please_login_with_your_qip_account">Please login with your QIP Account</string>
     <string name="login">Login</string>
     <string name="contacts">Contacts</string>
     <string name="add_user_icon">+</string>
